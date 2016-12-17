@@ -24,15 +24,14 @@ app.get('/webhook', function(req, res) {
 app.post('/webhook', function (req, res) {
   var data = req.body;
 
-  // Make sure this is a page subscription
+  
   if (data.object == 'page') {
-    // Iterate over each entry
-    // There may be multiple if batched
+    
     data.entry.forEach(function(pageEntry) {
       var pageID = pageEntry.id;
       var timeOfEvent = pageEntry.time;
 
-      // Iterate over each messaging event
+     
       pageEntry.messaging.forEach(function(messagingEvent) {
         if (messagingEvent.message) {
           receivedMessage(messagingEvent);
@@ -44,10 +43,6 @@ app.post('/webhook', function (req, res) {
       });
     });
 
-    // Assume all went well.
-    //
-    // You must send back a 200, within 20 seconds, to let us know you've
-    // successfully received the callback. Otherwise, the request will time out.
     res.sendStatus(200);
   }
 });
@@ -71,19 +66,6 @@ function receivedMessage(event) {
   var messageText = message.text;
   var messageAttachments = message.attachments;
   var quickReply = message.quick_reply;
-
- /* if (isEcho) {
-    // Just logging message echoes to console
-    console.log("Received echo for message %s and app %d with metadata %s",
-      messageId, appId, metadata);
-    return;
-  } else if (quickReply) {
-    var quickReplyPayload = quickReply.payload;
-    console.log("Quick reply for message %s with payload %s",
-      messageId, quickReplyPayload);
-    sendTextMessage(senderID, "Quick reply tapped");
-    return;
-  }*/
 
   if (messageText) {
      switch (messageText) {
@@ -110,9 +92,6 @@ function receivedMessage(event) {
         case 'ควาย' :
         sendTextMessage(senderID, "เดะหน้าเป็นรอยหรอก 😾");
         break
-/*case 'quick reply':
-sendQuickReply(senderID);
-break;*/
         default:
         sendTextMessage(senderID, "พิมพ์อะไรแมวไม่รู้เรื่อง :p \n เลือกเมนูเอาข้างล่างละกัน " );
         sendGreetMessage(senderID)
@@ -144,9 +123,9 @@ function receivedPostback(event) {
        NoThank(senderID)
   }////////////////////////////////////////////////////////////////////////////////////////////
   else if(payload){
-      //for(var i = 1; i < data.bigdata.length; i++) {
+      
                var obj = data.bigdata[payload-1];
-               //if(==1){
+               
                  setTimeout(function() {sendTextMessage(senderID, obj.text1); }, 500)
                  setTimeout(function() {sendTextMessage(senderID, obj.text2); }, 1000)
                  setTimeout(function() {sendTextMessage(senderID, obj.text3); }, 1500)
@@ -154,8 +133,7 @@ function receivedPostback(event) {
                  setTimeout(function() {sendTextMessage(senderID, obj.text5); }, 2500)
                  setTimeout(function() {sendTextMessage(senderID, obj.text6); }, 3000)
                  setTimeout(function() {fineHeres(senderID); },  3500)
-              // }
-          //   }
+          
   }else {
     var result = "";
   }
@@ -417,35 +395,6 @@ function NoThank(recipientId, messageText) {
 
   callSendAPI(messageData);
 }
-
-/*function sendQuickReply(recipientId) {
-  var messageData = {
-    recipient: {
-      id: recipientId
-    },
-    message: {
-      text: "What's your favorite movie genre?",
-      quick_replies: [
-        {
-          "content_type":"text",
-          "title":"Action",
-          "payload":"DEVELOPER_DEFINED_PAYLOAD_FOR_PICKING_ACTION"
-        },
-        {
-          "content_type":"text",
-          "title":"Comedy",
-          "payload":"DEVELOPER_DEFINED_PAYLOAD_FOR_PICKING_COMEDY"
-        },
-        {
-          "content_type":"text",
-          "title":"Drama",
-          "payload":"DEVELOPER_DEFINED_PAYLOAD_FOR_PICKING_DRAMA"
-        }
-      ]
-    }
-  };
-  callSendAPI(messageData);
-}*/
 
 app.listen(app.get('port'), function () {
   console.log('run at port', app.get('port'))
